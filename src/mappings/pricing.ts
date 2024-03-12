@@ -5,8 +5,8 @@ import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD, UNTRACKED_PAIRS } from 
 import {log} from "@graphprotocol/graph-ts";
 
 // TODO: update address
-const WETH_ADDRESS = '0x980b62da83eff3d4576c647993b0c1d7faf17c73'
-const USDC_WETH_PAIR = '0x35142e6410a060546f89fe5dc865eb13fdff5514'
+const WETH_ADDRESS = '0x3fb787101dc6be47cfe18aeee15404dcc842e6af'
+const USDC_WETH_PAIR = '0x079399d848986cbbdf5c69c6fd21c36662c4a7c7'
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
@@ -22,20 +22,20 @@ export function getEthPriceInUSD(): BigDecimal {
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
 // TODO: update address
-  '0x980b62da83eff3d4576c647993b0c1d7faf17c73', // WETH
-  '0xb893e3334d4bd6c5ba8277fd559e99ed683a9fc7', // USDC
+  '0x3fb787101dc6be47cfe18aeee15404dcc842e6af', // WETH
+  '0x300a7b57dc85b6a9776e249614abf0fe5c9905fb', // USDC.e
 ]
 
-let STABLE = '0xb893e3334d4bd6c5ba8277fd559e99ed683a9fc7'
+let STABLE = '0x300a7b57dc85b6a9776e249614abf0fe5c9905fb'
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
 let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('500')
 
 // minimum liquidity for price to get trackedc
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.5')
+let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('50')
 
 // minimum liquidity to stop trying to get biggest pair
-let MINIMUM_LIQUIDITY_ETH = BigDecimal.fromString('50')
+let MINIMUM_LIQUIDITY_ETH = BigDecimal.fromString('5000')
 
 /**
  * Search through graph to find derived Eth per token.

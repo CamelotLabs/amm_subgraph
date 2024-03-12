@@ -1,8 +1,8 @@
 {
-  "arbitrum-sepolia": {
+  "xai": {
     "Factory": {
       "address": "0x18E621B64d7808c3C47bccbbD7485d23F257D26f",
-      "startBlock": 8780258
+      "startBlock": 2436883
     }
   }
 }

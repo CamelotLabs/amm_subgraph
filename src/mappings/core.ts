@@ -20,7 +20,7 @@ import {
   FeePercentUpdated,
   SetStableSwap
 } from '../../generated/templates/Pair/Pair'
-import { updatePairDayData, updateTokenDayData, updateUniswapDayData, updatePairHourData } from './dayUpdates'
+import { updatePairDayData, updateTokenDayData, updateUniswapDayData } from './dayUpdates'
 import {
   getEthPriceInUSD,
   findEthPerToken,
@@ -33,11 +33,9 @@ import {
   ADDRESS_ZERO,
   FACTORY_ADDRESS,
   ONE_BI,
-  createUser,
-  createLiquidityPosition,
   ZERO_BD,
   BI_18,
-  createLiquiditySnapshot, exponentToBigDecimal, exponentToBigInt, convertBITokenToDecimal
+  exponentToBigDecimal, exponentToBigInt, convertBITokenToDecimal
 } from './helpers'
 import {PriceConsumer} from "../../generated/templates/Pair/PriceConsumer";
 
@@ -58,11 +56,8 @@ export function handleTransfer(event: Transfer): void {
   let factory = UniswapFactory.load(FACTORY_ADDRESS) as UniswapFactory
   let transactionHash = event.transaction.hash.toHexString()
 
-  // user stats
   let from = event.params.from
-  createUser(from)
   let to = event.params.to
-  createUser(to)
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString()) as Pair
@@ -213,20 +208,6 @@ export function handleTransfer(event: Transfer): void {
     }
     transaction.burns = burns
     transaction.save()
-  }
-
-  if (from.toHexString() != ADDRESS_ZERO && from.toHexString() != pair.id) {
-    let fromUserLiquidityPosition = createLiquidityPosition(event.address, from)
-    fromUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(from), BI_18)
-    fromUserLiquidityPosition.save()
-    createLiquiditySnapshot(fromUserLiquidityPosition, event)
-  }
-
-  if (event.params.to.toHexString() != ADDRESS_ZERO && to.toHexString() != pair.id) {
-    let toUserLiquidityPosition = createLiquidityPosition(event.address, to)
-    toUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(to), BI_18)
-    toUserLiquidityPosition.save()
-    createLiquiditySnapshot(toUserLiquidityPosition, event)
   }
 
   transaction.save()
@@ -399,14 +380,8 @@ export function handleMint(event: Mint): void {
   mint.amountUSD = amountTotalUSD as BigDecimal
   mint.save()
 
-
-  // update the LP position
-  let liquidityPosition = createLiquidityPosition(event.address, Address.fromBytes(mint.to))
-  createLiquiditySnapshot(liquidityPosition, event as ethereum.Event)
-
   // update day entities
   updatePairDayData(event as ethereum.Event, pair)
-  updatePairHourData(event as ethereum.Event, pair)
   updateUniswapDayData(event as ethereum.Event, uniswap as UniswapFactory)
   updateTokenDayData(token0 as Token, event as ethereum.Event, bundle as Bundle)
   updateTokenDayData(token1 as Token, event as ethereum.Event, bundle as Bundle)
@@ -465,13 +440,8 @@ export function handleBurn(event: Burn): void {
   burn.amountUSD = amountTotalUSD as BigDecimal
   burn.save()
 
-  // update the LP position
-  let liquidityPosition = createLiquidityPosition(event.address, Address.fromBytes(burn.sender as Bytes))
-  createLiquiditySnapshot(liquidityPosition, event)
-
   // update day entities
   updatePairDayData(event, pair)
-  updatePairHourData(event, pair)
   updateUniswapDayData(event, uniswap)
   updateTokenDayData(token0 as Token, event, bundle)
   updateTokenDayData(token1 as Token, event, bundle)
@@ -600,7 +570,6 @@ export function handleSwap(event: Swap): void {
 
   // update day entities
   let pairDayData = updatePairDayData(event, pair)
-  let pairHourData = updatePairHourData(event, pair)
   let uniswapDayData = updateUniswapDayData(event, uniswap)
   let token0DayData = updateTokenDayData(token0 as Token, event, bundle)
   let token1DayData = updateTokenDayData(token1 as Token, event, bundle)
@@ -619,12 +588,6 @@ export function handleSwap(event: Swap): void {
   pairDayData.dailyVolumeUSD = pairDayData.dailyVolumeUSD.plus(trackedAmountUSD)
   pairDayData.dailyFeeUSD = pairDayData.dailyFeeUSD.plus(feeAmountUSD)
   pairDayData.save()
-
-  // update hourly pair data
-  pairHourData.hourlyVolumeToken0 = pairHourData.hourlyVolumeToken0.plus(amount0Total)
-  pairHourData.hourlyVolumeToken1 = pairHourData.hourlyVolumeToken1.plus(amount1Total)
-  pairHourData.hourlyVolumeUSD = pairHourData.hourlyVolumeUSD.plus(trackedAmountUSD)
-  pairHourData.save()
 
   // swap specific updating for token0
   token0DayData.dailyVolumeToken = token0DayData.dailyVolumeToken.plus(amount0Total)

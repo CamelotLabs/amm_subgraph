@@ -28,7 +28,7 @@ export function getEthPriceInUSD(): BigDecimal {
 let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('500')
 
 // minimum liquidity for price to get trackedc
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.5')
+let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.01')
 
 // minimum liquidity to stop trying to get biggest pair
 let MINIMUM_LIQUIDITY_ETH = BigDecimal.fromString('50')

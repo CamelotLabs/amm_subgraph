@@ -5,36 +5,34 @@ import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD, UNTRACKED_PAIRS } from 
 import {log} from "@graphprotocol/graph-ts";
 
 // TODO: update address
-const WETH_ADDRESS = '0x3fb787101dc6be47cfe18aeee15404dcc842e6af'
-const USDC_WETH_PAIR = '0xcffa8a7e0a2f1256e4c3ed17a153272f7ba6d7c5'
+const WETH_ADDRESS = '0x754cdad6f5821077d6915004be2ce05f93d176f8'
+const USDC_WETH_PAIR = '0x1ae55ce2c2ff85ea257786ed992873f4d387b2bb'
+
+// token where amounts should contribute to tracked volume and liquidity
+let WHITELIST: string[] = [
+// TODO: update address
+  '0x754cdad6f5821077d6915004be2ce05f93d176f8', // WDMT
+  '0x13d675bc5e659b11cfa331594cf35a20815dcf02', // USDC
+]
+
+let STABLE = '0x13d675bc5e659b11cfa331594cf35a20815dcf02'
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
   let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
 
-  // TODO: check if token0 or token1
   if (usdcPair !== null) {
-    return usdcPair.token0Price
+    return usdcPair.token0 == STABLE ? usdcPair.token0Price : usdcPair.token1Price
   } else {
     return ZERO_BD
   }
 }
 
-// token where amounts should contribute to tracked volume and liquidity
-let WHITELIST: string[] = [
-// TODO: update address
-  '0x3fb787101dc6be47cfe18aeee15404dcc842e6af', // WXAI
-  '0x1e3769bd5fb2e9e9e7d4ed8667c947661f9a82e3', // USDC
-  '0xbee82cfdaff4a6aa4e4793cb81eb1c2e79ac463c' // WETH
-]
-
-let STABLE = '0x1e3769bd5fb2e9e9e7d4ed8667c947661f9a82e3'
-
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
 let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('500')
 
 // minimum liquidity for price to get trackedc
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('50')
+let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('1')
 
 // minimum liquidity to stop trying to get biggest pair
 let MINIMUM_LIQUIDITY_ETH = BigDecimal.fromString('5000')
@@ -84,12 +82,16 @@ export function findEthPerTokenWithoutCall(token: Token): BigDecimal {
   let price = ZERO_BD
   let lastPairReserveETH = MINIMUM_LIQUIDITY_THRESHOLD_ETH
 
-  // TODO: check if token0 or token1
   if(token.id == STABLE) {
     let pair =  Pair.load(USDC_WETH_PAIR)
     if(pair) {
-      let token1 = Token.load(pair.token1) as Token
-      price = pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
+      if(pair.token0 == STABLE) {
+        let token1 = Token.load(pair.token1) as Token
+        price = pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
+      } else {
+        let token0 = Token.load(pair.token0) as Token
+        price = pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * Eth per token 0
+      }
       return price
     }
   }

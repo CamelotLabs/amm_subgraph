@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: camelot-sanko
+    network: camelot-rari
     source:
       address: '0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4'
       abi: Factory
-      startBlock: 45
+      startBlock: 340544
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -40,7 +40,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pair
-    network: camelot-sanko
+    network: camelot-rari
     source:
       abi: Pair
     mapping:

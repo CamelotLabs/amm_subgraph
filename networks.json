@@ -1,8 +1,8 @@
 {
-  "camelot-sanko": {
+  "camelot-rari": {
     "Factory": {
       "address": "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4",
-      "startBlock": 45
+      "startBlock": 340544
     }
   }
 }

@@ -5,18 +5,17 @@ import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD, UNTRACKED_PAIRS } from 
 import {log} from "@graphprotocol/graph-ts";
 
 // TODO: update address
-const WETH_ADDRESS = '0xf037540e51d71b2d2b1120e8432ba49f29edfbd0'
-const USDC_WETH_PAIR = '0xa984428c00c878367b12cd49895bf6318734831e'
+const WETH_ADDRESS = '0x6b48c2e6a32077ec17e8ba0d98ffc676dfab1a30'
+const USDC_WETH_PAIR = '0x4f37922db35bbf0d89c3f699c24a3152d6a5d9c0'
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
 // TODO: update address
-  '0xf037540e51d71b2d2b1120e8432ba49f29edfbd0', // WETH
-  '0xfbda5f676cb37624f28265a144a48b0d6e87d3b6', // USDC
-  '0x362fae9a75b27bbc550aac28a7c1f96c8d483120', // USDT
+  '0x6b48c2e6a32077ec17e8ba0d98ffc676dfab1a30', // WETH
+  '0xa9f32a851b1800742e47725da54a09a7ef2556a3', // RUSD
 ]
 
-let STABLE = '0xfbda5f676cb37624f28265a144a48b0d6e87d3b6'
+let STABLE = '0xa9f32a851b1800742e47725da54a09a7ef2556a3'
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin

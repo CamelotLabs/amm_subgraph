@@ -38,7 +38,7 @@ class ChainInfo {
     this.factory = factory.toLowerCase()
     this.wrappedNative = wrappedNative.toLowerCase()
     this.wrappedNativeUSDCPool = wrappedNativeUSDCPool.toLowerCase()
-    this.whitelistTokens = whitelistTokens
+    this.whitelistTokens = whitelistTokens.map<string>((t: string): string => t.toLowerCase())
     this.stableCoin = stableCoin.toLowerCase()
     this.startBlock = startBlock
     this.minimumUSDThresholdNewPairs = minimumUSDThresholdNewPairs

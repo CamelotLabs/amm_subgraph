@@ -2,6 +2,7 @@
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
 const GRAVITY = "camelot-gravity"
+const MOLTEN = "camelot-molten"
 const PROOF_OF_PLAY = "camelot-proofofplay-apex"
 const RARI = "camelot-rari"
 const REYA = "camelot-reya"
@@ -50,16 +51,18 @@ class SupportedChains {
   arbitrumOne: ChainInfo;
   arbitrumSepolia: ChainInfo;
   gravity: ChainInfo;
+  molten: ChainInfo;
   proofOfPlay: ChainInfo;
   rari: ChainInfo;
   reya: ChainInfo;
   sanko: ChainInfo;
   xai: ChainInfo;
 
-  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, gravity: ChainInfo, proofOfPlay: ChainInfo, rari: ChainInfo, reya: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
+  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, gravity: ChainInfo, molten: ChainInfo, proofOfPlay: ChainInfo, rari: ChainInfo, reya: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
     this.arbitrumOne = arbitrumOne;
     this.arbitrumSepolia = arbitrumSepolia;
     this.gravity = gravity;
+    this.molten = molten;
     this.proofOfPlay = proofOfPlay;
     this.rari = rari;
     this.reya = reya;
@@ -124,6 +127,23 @@ const gravity = new ChainInfo(
   ],
   "0xFbDa5F676cB37624f28265A144A48B0d6e87d3b6", // USDC
   11985,
+  "500",
+  "100",
+  "100000"
+)
+
+const molten = new ChainInfo(
+  MOLTEN,
+  "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
+  "0xdBc38Db4F11b7D111477f17e757aa17dD3348a6d", // WMOLTEN
+  "0x4d08d70ac96c9f858d0c9Ed6686d1D58caE5aE43", // WMOLTEN-USDC
+  [
+    "0xBB859E225ac8Fb6BE1C7e38D87b767e95Fef0EbD", // WMOLTEN
+    "0x135B641E61CFC9a068b82E02fF0f051f6e5D4721", // USDC
+    "0x09Bf29B44130e88F113C1Fb0487BCB97b6920C31", // WETH
+  ],
+  "0x135B641E61CFC9a068b82E02fF0f051f6e5D4721", // USDC
+  3834334,
   "500",
   "100",
   "100000"
@@ -216,6 +236,7 @@ const supportedChains = new SupportedChains(
   arbitrumOne,
   arbitrumSepolia,
   gravity,
+  molten,
   proofOfPlay,
   rari,
   reya,
@@ -224,7 +245,7 @@ const supportedChains = new SupportedChains(
 )
 
 // Edit this for the given deployment
-const TARGET_CHAIN: ChainInfo = supportedChains.gravity
+const TARGET_CHAIN: ChainInfo = supportedChains.molten
 
 export {
   TARGET_CHAIN
